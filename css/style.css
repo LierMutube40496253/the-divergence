@@ -437,8 +437,8 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) translateY(-10px);
-  width: 64%;
-  max-width: 820px;
+  width: 56%;
+  max-width: 720px;
   z-index: 10;
   opacity: 0;
   pointer-events: none;
