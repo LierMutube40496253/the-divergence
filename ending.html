@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Divergence — Ending</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Ending-specific overrides */
+    .ending-portrait-col { display: none; }
+    .ending-content-col {
+      min-height: auto;
+      width: min(100%, 980px);
+      margin: 0 auto;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Emeka stat accent */
+    .ending--B .ending-stat__value { color: var(--emeka-primary); }
+    .ending--C .ending-stat__value { color: var(--ui-copper); }
+  </style>
+</head>
+<body class="ending-page" id="ending-root">
+
+  <!-- Portrait column — populated by JS -->
+  <div class="ending-portrait-col" id="portrait-col"></div>
+
+  <!-- Content column -->
+  <div class="ending-content-col">
+
+    <div class="ending-label" id="ending-label">ENDING</div>
+
+    <blockquote class="ending-quote" id="ending-quote" style="color: var(--jiho-primary);"></blockquote>
+
+    <div class="ending-rule" aria-hidden="true">
+      <span class="ending-rule__line"></span>
+      <span class="ending-rule__diamond"></span>
+      <span class="ending-rule__line"></span>
+    </div>
+
+    <div class="ending-stats" id="ending-stats"></div>
+
+    <p class="ending-narration" id="ending-narration"></p>
+
+    <div class="ending-actions">
+      <button class="btn-ending btn-replay" id="btn-replay">Play Again</button>
+      <a class="btn-ending btn-notebook" href="index.html" id="btn-home">← Back to Start</a>
+    </div>
+
+  </div>
+
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var end = params.get('end') || 'A';
+  var root = document.getElementById('ending-root');
+  root.classList.add('ending--' + end);
+
+  var ENDINGS = {
+    A: {
+      label:   'ENDING A · THE PLANNING ARGUMENT',
+      quote:   '"The data shows a path, and the path is replicable. Korea walked it imperfectly, under conditions I would not wish on anyone, and produced outcomes that were genuine and lasting. Structural conditions matter. But planning is what determines whether conditions become advantages or remain merely conditions."',
+      quoteColor: 'var(--jiho-primary)',
+      portrait: 'assets/sprites/jiho_pleased.jpg',
+      portraitClass: 'ending-portrait-col--jiho',
+      stats: [
+        { value: '11×',    label: 'Wealth gap, Korea vs Nigeria, 2007' },
+        { value: '32 yrs', label: 'Life expectancy gap' },
+        { value: '55 yrs', label: 'Time for Korea to close its own starting gap' },
+      ],
+      narration:
+        'Ji-ho pays the tab without making a point of it. He is already thinking about the morning session.\n\n' +
+        'He puts on his coat and pauses at the door.\n\n' +
+        '"Come to Seoul sometime," he says. "I will show you what we built — all of it, the parts we are proud of and the parts we are still trying to reckon with."\n\n' +
+        'He walks out into the Swiss winter.',
+    },
+    B: {
+      label:   'ENDING B · THE STRUCTURAL ARGUMENT',
+      quote:   '"The oil moved through our economy like a current, displacing every other sector, hollowing out the institutions a modern state requires, bypassing the accountability between government and citizen that taxation creates. The oil made us poorer than the nothing Korea started with. That is the paradox."',
+      quoteColor: 'var(--emeka-primary)',
+      portrait: 'assets/sprites/emeka_neutral.jpg',
+      portraitClass: 'ending-portrait-col--emeka',
+      stats: [
+        { value: '11×',    label: 'Wealth gap, Korea vs Nigeria, 2007' },
+        { value: '32 yrs', label: 'Life expectancy gap' },
+        { value: '$400B',  label: 'Estimated Nigerian oil revenue lost to corruption, 1960–1999' },
+      ],
+      narration:
+        'Emeka walks you to the entrance of the hotel. The Alps are somewhere out there in the dark.\n\n' +
+        '"The data is accurate," he says, "all of it. But data shows you the outcome — it rarely shows you the mechanism. The mechanism, the way oil structured governance, crowded out institutions, made urgency disappear, that is what you need to read underneath the numbers."\n\n' +
+        'He shakes your hand and goes back inside. You stand in the cold for a moment with your notebook. You have a different paper to write now than the one you arrived with.',
+    },
+    C: {
+      label:   'ENDING C · THE OPEN QUESTION',
+      quote:   '"Management made the difference." / "Structure determined what management was possible." / "The path existed." / "The path was not equally available." / "Both things are true."',
+      quoteColor: 'var(--ui-copper)',
+      portrait: null,
+      portraitClass: 'ending-portrait-col--both',
+      stats: [
+        { value: '11×',    label: 'Wealth gap, Korea vs Nigeria, 2007' },
+        { value: '32 yrs', label: 'Life expectancy gap' },
+        { value: '2007→',  label: 'The divergence is still ongoing' },
+      ],
+      narration:
+        'They walk out together, still talking. Ji-ho is saying something about institutional capacity. Emeka is saying something about colonial trade structures and the IMF. Their voices fade down the corridor.\n\n' +
+        'Your notebook is still open. The final chart loads on screen — Korea\'s long arc and Nigeria\'s short one. Then slowly the paths extend forward past 2007, drawn as dashed lines moving into a future the data has not yet recorded.\n\n' +
+        'The paths are still moving. The story is not over.\n\nThe divergence between South Korea and Nigeria is real, documented, and deeply consequential for the people who lived inside it. The reasons for it are multiple, structural, and contested. What comes next has not been determined yet.',
+    },
+  };
+
+  var data = ENDINGS[end] || ENDINGS['A'];
+
+  // Portrait column
+  var portCol = document.getElementById('portrait-col');
+  portCol.classList.add(data.portraitClass);
+
+  if (end === 'C') {
+    // Two portraits side by side
+    var jihoImg = document.createElement('img');
+    jihoImg.src = 'assets/sprites/jiho_neutral.jpg';
+    jihoImg.alt = 'Ji-ho';
+    jihoImg.style.cssText = 'width:48%;height:100%;object-fit:cover;object-position:top;';
+    var emekaImg2 = document.createElement('img');
+    emekaImg2.src = 'assets/sprites/emeka_neutral.jpg';
+    emekaImg2.alt = 'Emeka';
+    emekaImg2.style.cssText = 'width:48%;height:100%;object-fit:cover;object-position:top;align-self:flex-end;';
+    portCol.appendChild(jihoImg);
+    portCol.appendChild(emekaImg2);
+  } else if (data.portrait) {
+    var img = document.createElement('img');
+    img.src = data.portrait;
+    img.alt = '';
+    img.onerror = function() {
+      portCol.style.background = 'linear-gradient(to top,' +
+        (end === 'A' ? '#b8860b,#0d0b18' : '#2d6b45,#0d0b18') + ')';
+      portCol.removeChild(img);
+    };
+    portCol.appendChild(img);
+  } else {
+    portCol.style.background = 'linear-gradient(to top,#2a1f3d,#0d0b18)';
+  }
+
+  // Label
+  document.getElementById('ending-label').textContent = data.label;
+
+  // Quote
+  var quoteEl = document.getElementById('ending-quote');
+  quoteEl.style.color = data.quoteColor;
+  quoteEl.textContent = data.quote;
+
+  // Stats
+  var statsEl = document.getElementById('ending-stats');
+  data.stats.forEach(function(s) {
+    var div = document.createElement('div');
+    div.innerHTML =
+      '<span class="ending-stat__value">' + s.value + '</span>' +
+      '<span class="ending-stat__label">' + s.label + '</span>';
+    statsEl.appendChild(div);
+  });
+
+  // Stat value color override for B and C
+  if (end === 'B') {
+    statsEl.querySelectorAll('.ending-stat__value').forEach(function(el) {
+      el.style.color = 'var(--emeka-primary)';
+    });
+  } else if (end === 'C') {
+    statsEl.querySelectorAll('.ending-stat__value').forEach(function(el) {
+      el.style.color = 'var(--ui-copper)';
+    });
+  }
+
+  // Narration
+  document.getElementById('ending-narration').textContent = data.narration;
+
+  // Replay button
+  document.getElementById('btn-replay').addEventListener('click', function() {
+    for (var i = 1; i <= 3; i++) {
+      localStorage.removeItem('div_ch' + i);
+    }
+    window.location.href = 'index.html';
+  });
+})();
+</script>
+
+</body>
+</html>

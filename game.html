@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Divergence</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+</head>
+<body class="game-page">
+
+  <!-- ── TOP BAR ─────────────────────────────────────────────────────────── -->
+  <header class="top-bar">
+    <span class="top-bar__chapter" id="chapter-label">Prologue · The Bar</span>
+    <div class="top-bar__diamonds" aria-label="Chapter progress">
+      <div class="top-bar__diamond" id="top-diamond-1"></div>
+      <div class="top-bar__diamond" id="top-diamond-2"></div>
+      <div class="top-bar__diamond" id="top-diamond-3"></div>
+    </div>
+  </header>
+
+  <!-- ── SCENE AREA ──────────────────────────────────────────────────────── -->
+  <div class="game-scene" id="game-scene">
+
+    <!-- Background -->
+    <div class="scene-bg" aria-hidden="true"></div>
+
+    <!-- Ji-ho portrait — LEFT -->
+    <div class="character-sprite character-sprite--jiho is-inactive" id="portrait-jiho">
+      <img
+        src="assets/sprites/jiho_neutral.jpg"
+        id="jiho-img"
+        alt="Ji-ho Shin"
+        style="height:100%;width:auto;object-fit:cover;object-position:top;"
+        onerror="this.style.display='none'"
+      >
+    </div>
+
+    <!-- Emeka portrait — RIGHT -->
+    <div class="character-sprite character-sprite--emeka is-inactive" id="portrait-emeka">
+      <img
+        src="assets/sprites/emeka_neutral.jpg"
+        id="emeka-img"
+        alt="Emeka Adeyemi"
+        style="height:100%;width:auto;object-fit:cover;object-position:top;"
+        onerror="this.style.display='none'"
+      >
+    </div>
+
+    <!-- Chart area — CENTER (hidden until activated) -->
+    <div class="chart-area" id="chart-area" aria-hidden="true">
+      <button class="chart-expand-btn" id="chart-expand-btn" title="Expand">⤢</button>
+      <div class="chart-frame" id="chart-frame-main">
+        <p class="chart-title" id="chart-title"></p>
+        <div class="chart-canvas" id="chart-canvas"></div>
+      </div>
+      <!-- Extra panel for additive chart options -->
+      <div class="chart-frame chart-panel-extra" id="chart-frame-extra" style="display:none;">
+        <p class="chart-title" id="chart-title-extra"></p>
+        <div class="chart-canvas" id="chart-canvas-extra"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Backdrop for expanded chart mode -->
+  <div class="chart-backdrop" id="chart-backdrop"></div>
+
+  <!-- ── THREE-BOX DIALOGUE ──────────────────────────────────────────────── -->
+  <div class="game-dialogue">
+
+    <!-- JI-HO (left 35%) -->
+    <div class="dialogue-box dialogue-box--jiho is-inactive" id="box-jiho">
+      <div class="dialogue-name dialogue-name--jiho">
+        <img
+          src="assets/sprites/jiho_neutral.jpg"
+          id="jiho-thumb"
+          class="dialogue-thumb"
+          alt=""
+          onerror="this.style.display='none'"
+        >
+        Ji-ho Shin
+      </div>
+      <div class="dialogue-text" id="text-jiho"></div>
+      <span class="continue-indicator" id="continue-jiho">››</span>
+    </div>
+
+    <!-- PLAYER / NARRATOR (center 30%) -->
+    <div class="dialogue-box dialogue-box--player" id="box-player">
+      <div class="dialogue-text" id="text-player"></div>
+    </div>
+
+    <!-- EMEKA (right 35%) -->
+    <div class="dialogue-box dialogue-box--emeka is-inactive" id="box-emeka">
+      <div class="dialogue-name dialogue-name--emeka">
+        <img
+          src="assets/sprites/emeka_neutral.jpg"
+          id="emeka-thumb"
+          class="dialogue-thumb"
+          alt=""
+          onerror="this.style.display='none'"
+        >
+        Emeka Adeyemi
+      </div>
+      <div class="dialogue-text" id="text-emeka"></div>
+      <span class="continue-indicator" id="continue-emeka">››</span>
+    </div>
+
+  </div>
+
+  <!-- Scripts — order matters -->
+  <script src="js/charts.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/engine.js"></script>
+
+  <script>
+    // Mark top-bar diamonds from localStorage
+    for (var i = 1; i <= 3; i++) {
+      if (localStorage.getItem('div_ch' + i) === 'done') {
+        var d = document.getElementById('top-diamond-' + i);
+        if (d) d.classList.add('is-complete');
+      }
+    }
+  </script>
+
+  <script>
+    // Chart expand / collapse (lightbox)
+    (function () {
+      var btn      = document.getElementById('chart-expand-btn');
+      var backdrop = document.getElementById('chart-backdrop');
+      var area     = document.getElementById('chart-area');
+
+      function expand() {
+        area.classList.add('is-expanded');
+        backdrop.classList.add('is-visible');
+        btn.textContent = '✕';
+        btn.title = 'Collapse';
+      }
+      function collapse() {
+        area.classList.remove('is-expanded');
+        backdrop.classList.remove('is-visible');
+        btn.textContent = '⤢';
+        btn.title = 'Expand';
+      }
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        area.classList.contains('is-expanded') ? collapse() : expand();
+      });
+      backdrop.addEventListener('click', collapse);
+    })();
+  </script>
+
+</body>
+</html>

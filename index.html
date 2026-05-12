@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Divergence</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="intro-page">
+
+  <!-- Background image + overlay -->
+  <div class="intro-bg" aria-hidden="true"></div>
+
+  <!-- Centered content -->
+  <main class="intro-content">
+
+    <h1 class="intro-title">THE DIVERGENCE</h1>
+
+    <p class="intro-subtitle">An interactive data story about economic development</p>
+
+    <!-- Decorative rule with diamond -->
+    <div class="intro-rule" aria-hidden="true">
+      <span class="intro-rule__line"></span>
+      <span class="intro-rule__diamond"></span>
+      <span class="intro-rule__line"></span>
+    </div>
+
+    <p class="intro-description">
+      In 1952, South Korea and Nigeria had almost identical GDP per person. By 2007, Korea was eleven times richer, with a life expectancy 32 years longer. How did two countries that started from the same position end up so far apart?<br><br>
+      This is an interactive data narrative built on real historical data from Gapminder. You will sit in on a late-night conversation between two economists at Davos, examine data across three chapters of divergence, and form your own conclusion about what drove it.
+    </p>
+
+    <!-- BEGIN button wrapped for all 4 corner brackets -->
+    <div class="btn-begin-wrap">
+      <a href="game.html" class="btn-begin">Begin</a>
+    </div>
+
+    <!-- Chapter progress diamonds -->
+    <div class="chapter-diamonds" aria-label="Chapter progress">
+      <div class="chapter-diamond" id="diamond-1" title="Chapter 1 · The Divergence"></div>
+      <div class="chapter-diamond" id="diamond-2" title="Chapter 2 · The Structural Trap"></div>
+      <div class="chapter-diamond" id="diamond-3" title="Chapter 3 · The Demographic Dividend"></div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  // Read localStorage and fill completed chapter diamonds
+  for (var i = 1; i <= 3; i++) {
+    if (localStorage.getItem('div_ch' + i) === 'done') {
+      var d = document.getElementById('diamond-' + i);
+      if (d) d.classList.add('is-complete');
+    }
+  }
+</script>
+
+</body>
+</html>
