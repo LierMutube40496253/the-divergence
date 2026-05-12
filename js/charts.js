@@ -20,7 +20,7 @@ window.Charts = (() => {
     const extraFrame = document.getElementById('chart-frame-extra');
     if (extraFrame) extraFrame.style.display = 'none';
     container.innerHTML = '';
-    container.style.height = '360px';
+    container.style.height = '300px';
     if (titleEl) titleEl.textContent = title || '';
 
     const img = document.createElement('img');
@@ -32,7 +32,7 @@ window.Charts = (() => {
 
   function showImgPair(container, src1, src2, titleEl, title) {
     container.innerHTML = '';
-    container.style.height = '360px';
+    container.style.height = '300px';
     if (titleEl) titleEl.textContent = title || '';
 
     const wrap = document.createElement('div');
