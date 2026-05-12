@@ -331,6 +331,30 @@ a {
   text-transform: uppercase;
 }
 
+.top-bar__back-btn {
+  background: none;
+  border: none;
+  font-family: 'Lora', serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 6px;
+  transition: color 0.15s;
+}
+.top-bar__back-btn:not(:disabled):hover { color: var(--jiho-primary); }
+.top-bar__back-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* Choice hint */
+.choices-hint {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  font-style: italic;
+  text-align: center;
+}
+
 .top-bar__diamonds {
   display: flex;
   gap: 8px;
@@ -434,9 +458,9 @@ a {
 /* CHART AREA */
 .chart-area {
   position: absolute;
-  top: 50%;
+  top: 28%;
   left: 50%;
-  transform: translate(-50%, -50%) translateY(-10px);
+  transform: translate(-50%, -50%);
   width: 56%;
   max-width: 720px;
   z-index: 10;

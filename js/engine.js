@@ -9,6 +9,8 @@ const Engine = (() => {
   let typewriteEl      = null;
   let typewriteText    = '';
   let typewriteCb      = null;
+  let history          = [];
+  let _skipHistory     = false;
 
   // ── DOM REFERENCES ─────────────────────────────────────────────────────────
   const el = {
@@ -67,6 +69,13 @@ const Engine = (() => {
       window.location.href = node._navigate;
       return;
     }
+
+    // Push current node to history before overwriting (unless going back)
+    if (!_skipHistory && currentNode && currentNode.id !== node.id) {
+      history.push(currentNode.id);
+      updateBackBtn();
+    }
+    _skipHistory = false;
 
     currentNode = node;
     stopTypewriter();
@@ -151,6 +160,15 @@ const Engine = (() => {
     });
 
     el.textPlayer.appendChild(frag);
+
+    // Show hint for the "continue to next chapter" option when it's not the first choice
+    const contIdx = node.choices.findIndex((c, i) => c.isD && i > 0);
+    if (contIdx > 0) {
+      const hint = document.createElement('p');
+      hint.className = 'choices-hint';
+      hint.textContent = 'Select option ' + letters[contIdx] + ' to continue to the next chapter.';
+      el.textPlayer.appendChild(hint);
+    }
   }
 
   // ── PREDICTION PROMPT ─────────────────────────────────────────────────────
@@ -401,6 +419,9 @@ const Engine = (() => {
   document.getElementById('game-scene').addEventListener('click', handleClick);
   document.querySelector('.game-dialogue').addEventListener('click', handleClick);
 
+  const _backBtn = document.getElementById('back-btn');
+  if (_backBtn) _backBtn.addEventListener('click', function (e) { e.stopPropagation(); goBack(); });
+
   // ── ADVANCE ───────────────────────────────────────────────────────────────
   function advance(nextId) {
     if (!nextId) return;
@@ -409,6 +430,28 @@ const Engine = (() => {
       : TEST_NODES;
     const next = nodeMap[nextId];
     if (next) showNode(next);
+  }
+
+  // ── BACK ──────────────────────────────────────────────────────────────────
+  function goBack() {
+    if (history.length === 0) return;
+    delete el._reactionNext;
+    stopTypewriter();
+    const prevId = history.pop();
+    const nodeMap = (window.STORY && Object.keys(window.STORY).length > 0)
+      ? window.STORY
+      : TEST_NODES;
+    const prev = nodeMap[prevId];
+    if (prev) {
+      _skipHistory = true;
+      showNode(prev);
+    }
+    updateBackBtn();
+  }
+
+  function updateBackBtn() {
+    const btn = document.getElementById('back-btn');
+    if (btn) btn.disabled = history.length === 0;
   }
 
   // ── CHART CONTROL ─────────────────────────────────────────────────────────
